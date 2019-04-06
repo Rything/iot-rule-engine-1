@@ -1,0 +1,19 @@
+version: "3"
+
+networks:
+  main_network:
+    driver: bridge
+
+services:
+  engine-db:
+    image: postgres:10.2-alpine
+    container_name:  engine-db
+    restart: on-failure
+    environment:
+      POSTGRES_USER: my_user
+      POSTGRES_PASSWORD: my_password
+      POSTGRES_DB: engine
+    ports:
+      - 5432:5432
+    networks:
+      - main_network
