@@ -4,7 +4,8 @@ type NodeType int
 
 const (
 	SourceNode = iota
-	OtherNode
+	ActionNode
+	ConditionNode
 )
 
 type Node struct {

@@ -5,13 +5,13 @@ import (
 	"time"
 
 	"github.com/nattaponra/iot-rule-engine/network"
-
 	"github.com/nattaponra/iot-rule-engine/node"
+	"github.com/robertkrimen/otto"
 )
 
 func main() {
 
-	//Create instance node
+	//######################## MQTT NODE ###################################
 	mqttNode := node.NewNode("MQTT-Sub", node.SourceNode)
 
 	//Create Property form input
@@ -60,8 +60,60 @@ func main() {
 
 	})
 
-	debugNode := node.NewNode("DebugNode", node.OtherNode)
+	//######################## Script NODE ###################################
+	scriptNode := node.NewNode("scriptNode", node.ConditionNode)
+	//Create Property form input
+	formInputs = map[string]node.FormInput{
+		"script": node.FormInput{
+			InputType:    node.Text,
+			DefaultValue: "return input==='Hello World';",
+			IsRequired:   true,
+		},
+	}
 
+	//Set  form input that we just creates above.
+	scriptNode.SetProperties(node.Properties{
+		FormInputs: formInputs,
+	})
+
+	scriptNode.SetConfig(node.NodeConfig{
+		InputNodeType:      node.Single,
+		InputNodeDataType:  node.String,
+		OutputNodeType:     node.Single,
+		OutputNodeDataType: node.String,
+	})
+
+	scriptNode.SetExecute(func(n node.Node, output chan interface{}) {
+
+		pro := n.GetProperties()
+		injectSctipt := pro.FormInputs["script"].GetStringValue()
+		vm := otto.New()
+		vm.Set("input", n.Input.([]string)[0])
+		var script = `
+		(function(input){
+		 ` + injectSctipt + `
+ 		})(input);
+ `
+		fmt.Println("RunScript:", script)
+
+		value, err := vm.Run(script)
+
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+
+		var result bool
+		if value.IsBoolean() {
+			if result, err = value.ToBoolean(); err != nil {
+				fmt.Println(err.Error())
+			}
+
+		}
+		output <- result
+	})
+
+	//######################## Debug NODE ###################################
+	debugNode := node.NewNode("DebugNode", node.ActionNode)
 	//Create Property form input
 	formInputs = map[string]node.FormInput{
 		"format": node.FormInput{
@@ -87,11 +139,12 @@ func main() {
 		pro := n.GetProperties()
 		fmt.Println("Prevouise Node Output:", n.Input)
 		fmt.Println("Format:", pro.FormInputs["format"].GetStringValue())
-		output <- pro.FormInputs["format"].GetStringValue()
+		output <- n.Input
 	})
 
 	nw := network.NewNetwork()
 	nw.AddNode(mqttNode)
+	nw.AddNode(scriptNode)
 	nw.AddNode(debugNode)
 	nw.Start()
 
