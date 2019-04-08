@@ -8,13 +8,14 @@ import (
 )
 
 const (
-	NodeNotFoundInNetwork string = "Not not found in network"
-	InputParamOutOfLength string = "Input param out of length"
-	InputParamIsInvalid   string = "Input param is invalid"
+	NodeNotFoundInNetwork     string = "Not not found in network"
+	InputParamOutOfLength     string = "Input param out of length"
+	InputParamIsInvalidFormat string = "Input param is invalid format"
 )
 
 type NetworkNode struct {
-	Nodes []node.Node
+	started bool
+	Nodes   []node.Node
 }
 
 func NewNetwork() *NetworkNode {
@@ -39,10 +40,21 @@ func (nw *NetworkNode) Input(inputParams ...interface{}) error {
 	}
 
 	if IsInvalidInputFormat(config, inputParams) {
-		return errors.New(InputParamOutOfLength)
+		return errors.New(InputParamIsInvalidFormat)
 	}
 
 	return nil
+}
+
+func (nw *NetworkNode) Start() {
+	nw.started = true
+
+	if nw.Nodes[0].Type == node.SourceNode {
+		go func() {
+			nw.Nodes[0].Execute()
+		}()
+	}
+
 }
 
 //IsInvalidInputFormat เป็น func ที่ตรวจสอบว่า input parameter ตรง formatที่ node config ไว้หรือไม่

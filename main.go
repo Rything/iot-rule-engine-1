@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/nattaponra/iot-rule-engine/network"
 
@@ -11,12 +12,22 @@ import (
 func main() {
 
 	//Create instance node
-	n := node.NewNode("MQTT-Sub")
+	n := node.NewNode("MQTT-Sub", node.SourceNode)
 
 	//Create Property form input
 	formInputs := []node.FormInput{
 		node.FormInput{
-			InputName:  "script",
+			InputName:  "host",
+			InputType:  node.Text,
+			IsRequired: true,
+		},
+		node.FormInput{
+			InputName:  "port",
+			InputType:  node.Text,
+			IsRequired: true,
+		},
+		node.FormInput{
+			InputName:  "topic",
 			InputType:  node.Text,
 			IsRequired: true,
 		},
@@ -29,20 +40,25 @@ func main() {
 
 	n.SetConfig(node.NodeConfig{
 		InputNodeType:      node.Single,
-		InputNodeDataType:  node.Int,
-		OutputNodeType:     node.Multiple,
-		OutputNodeDataType: node.Bool,
+		InputNodeDataType:  node.String,
+		OutputNodeType:     node.Single,
+		OutputNodeDataType: node.String,
 	})
 
-	n.Execute(func() {
-		fmt.Println("Execute")
+	n.SetExecute(func(n node.Node) {
+		for {
+			n.SetOutput([]string{"Hello World"})
+			fmt.Println(n.Output)
+			time.Sleep(time.Second)
+		}
+
 	})
 
 	nw := network.NewNetwork()
 	nw.AddNode(n)
+	nw.Start()
 
-	err := nw.Input(1)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
+	var e int
+	fmt.Scanf("%d", &e)
+
 }
