@@ -12,7 +12,7 @@ type Node struct {
 	Name       string
 	properties Properties
 	config     NodeConfig
-	execute    func(Node)
+	execute    func(Node, chan interface{})
 	Input      interface{}
 	Output     interface{}
 }
@@ -48,10 +48,10 @@ func (n *Node) GetConfig() NodeConfig {
 	return n.config
 }
 
-func (n *Node) SetExecute(f func(n Node)) {
+func (n *Node) SetExecute(f func(n Node, output chan interface{})) {
 	n.execute = f
 }
 
-func (n *Node) Execute() {
-	n.execute(*n)
+func (n *Node) Execute(output chan interface{}) {
+	n.execute(*n, output)
 }

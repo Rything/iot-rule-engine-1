@@ -14,8 +14,7 @@ const (
 )
 
 type NetworkNode struct {
-	started bool
-	Nodes   []node.Node
+	Nodes []node.Node
 }
 
 func NewNetwork() *NetworkNode {
@@ -47,12 +46,23 @@ func (nw *NetworkNode) Input(inputParams ...interface{}) error {
 }
 
 func (nw *NetworkNode) Start() {
-	nw.started = true
 
-	if nw.Nodes[0].Type == node.SourceNode {
-		go func() {
-			nw.Nodes[0].Execute()
-		}()
+	output := make(chan interface{}, 1)
+	var bufferOutput interface{}
+
+	for i := 0; i < len(nw.Nodes); i++ {
+		if nw.Nodes[i].Type == node.SourceNode {
+			go nw.Nodes[i].Execute(output)
+
+		} else {
+			nw.Nodes[i].SetInput(bufferOutput)
+			go nw.Nodes[i].Execute(output)
+
+		}
+
+		//Send current output node to next input node.
+		bufferOutput = <-output
+		fmt.Println(bufferOutput)
 	}
 
 }

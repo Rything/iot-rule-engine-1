@@ -12,7 +12,7 @@ import (
 func main() {
 
 	//Create instance node
-	n := node.NewNode("MQTT-Sub", node.SourceNode)
+	mqttNode := node.NewNode("MQTT-Sub", node.SourceNode)
 
 	//Create Property form input
 	formInputs := map[string]node.FormInput{
@@ -34,33 +34,65 @@ func main() {
 	}
 
 	//Set  form input that we just creates above.
-	n.SetProperties(node.Properties{
+	mqttNode.SetProperties(node.Properties{
 		FormInputs: formInputs,
 	})
 
-	n.SetConfig(node.NodeConfig{
+	mqttNode.SetConfig(node.NodeConfig{
 		InputNodeType:      node.Single,
 		InputNodeDataType:  node.String,
 		OutputNodeType:     node.Single,
 		OutputNodeDataType: node.String,
 	})
 
-	n.SetExecute(func(n node.Node) {
+	mqttNode.SetExecute(func(n node.Node, output chan interface{}) {
 		pro := n.GetProperties()
 		fmt.Println("Host:", pro.FormInputs["host"].GetStringValue())
 		fmt.Println("Port:", pro.FormInputs["port"].GetStringValue())
 		fmt.Println("Topic:", pro.FormInputs["topic"].GetStringValue())
 
 		for {
+			output <- []string{"Hello World"}
 			n.SetOutput([]string{"Hello World"})
-			fmt.Println(n.Output)
+			///	fmt.Println(n.Output)
 			time.Sleep(time.Second)
 		}
 
 	})
 
+	debugNode := node.NewNode("DebugNode", node.OtherNode)
+
+	//Create Property form input
+	formInputs = map[string]node.FormInput{
+		"format": node.FormInput{
+			InputType:    node.Text,
+			DefaultValue: "json",
+			IsRequired:   true,
+		},
+	}
+
+	//Set  form input that we just creates above.
+	debugNode.SetProperties(node.Properties{
+		FormInputs: formInputs,
+	})
+
+	debugNode.SetConfig(node.NodeConfig{
+		InputNodeType:      node.Single,
+		InputNodeDataType:  node.String,
+		OutputNodeType:     node.Single,
+		OutputNodeDataType: node.String,
+	})
+
+	debugNode.SetExecute(func(n node.Node, output chan interface{}) {
+		pro := n.GetProperties()
+		fmt.Println("Prevouise Node Output:", n.Input)
+		fmt.Println("Format:", pro.FormInputs["format"].GetStringValue())
+		output <- pro.FormInputs["format"].GetStringValue()
+	})
+
 	nw := network.NewNetwork()
-	nw.AddNode(n)
+	nw.AddNode(mqttNode)
+	nw.AddNode(debugNode)
 	nw.Start()
 
 	var e int
