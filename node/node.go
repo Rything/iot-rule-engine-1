@@ -1,13 +1,16 @@
 package node
 
 type Node struct {
+	Name       string
 	properties Properties
 	config     NodeConfig
 	execute    func()
 }
 
-func NewNode() *Node {
-	return &Node{}
+func NewNode(name string) *Node {
+	return &Node{
+		Name: name,
+	}
 }
 
 func (n *Node) SetProperties(p Properties) {

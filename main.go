@@ -11,7 +11,7 @@ import (
 func main() {
 
 	//Create instance node
-	n := node.NewNode()
+	n := node.NewNode("MQTT-Sub")
 
 	//Create Property form input
 	formInputs := []node.FormInput{
