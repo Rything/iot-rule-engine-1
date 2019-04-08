@@ -21,3 +21,11 @@ type NodeConfig struct {
 	InputNodeDataType  IONodeDataType
 	OutputNodeDataType IONodeDataType
 }
+
+func (nc NodeConfig) IsOutputMultipleConnect() bool {
+	return nc.OutputNodeType == Multiple
+}
+
+func (nc NodeConfig) IsInputSingleConnect() bool {
+	return nc.InputNodeType == Single
+}

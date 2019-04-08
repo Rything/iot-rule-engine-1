@@ -1,23 +1,31 @@
 package node
 
-type node struct {
+type Node struct {
 	properties Properties
 	config     NodeConfig
 	execute    func()
 }
 
-func NewNode() *node {
-	return &node{}
+func NewNode() *Node {
+	return &Node{}
 }
 
-func (n *node) SetProperties(p Properties) {
+func (n *Node) SetProperties(p Properties) {
 	n.properties = p
 }
 
-func (n *node) SetConfig(cf NodeConfig) {
+func (n *Node) SetConfig(cf NodeConfig) {
 	n.config = cf
 }
 
-func (n *node) Execute(f func()) {
-	f()
+func (n *Node) GetConfig() NodeConfig {
+	return n.config
+}
+
+func (n *Node) Execute(f func()) {
+	n.execute = f
+}
+
+func (n *Node) Asset() {
+	n.execute()
 }

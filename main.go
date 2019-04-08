@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 
+	"github.com/nattaponra/iot-rule-engine/network"
+
 	"github.com/nattaponra/iot-rule-engine/node"
 )
 
@@ -35,4 +37,12 @@ func main() {
 	n.Execute(func() {
 		fmt.Println("Execute")
 	})
+
+	nw := network.NewNetwork()
+	nw.AddNode(n)
+
+	err := nw.Input(1)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 }
