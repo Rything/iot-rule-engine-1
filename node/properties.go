@@ -7,11 +7,20 @@ const (
 )
 
 type FormInput struct {
-	InputName  string
-	InputType  InputType
-	IsRequired bool
+	InputType    InputType
+	Value        interface{}
+	DefaultValue interface{}
+	IsRequired   bool
 }
 
+// Properties
 type Properties struct {
-	FormInputs []FormInput
+	FormInputs map[string]FormInput
+}
+
+func (fi FormInput) GetStringValue() string {
+	if fi.Value != nil {
+		return fi.Value.(string)
+	}
+	return fi.DefaultValue.(string)
 }
