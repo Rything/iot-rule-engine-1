@@ -45,9 +45,12 @@ func (nw *NetworkNode) Input(inputParams ...interface{}) error {
 	return nil
 }
 
+//IsInvalidInputFormat เป็น func ที่ตรวจสอบว่า input parameter ตรง formatที่ node config ไว้หรือไม่
 func IsInvalidInputFormat(config node.NodeConfig, inputParams []interface{}) bool {
 	for _, value := range inputParams {
+
 		var inputNodeDataType node.IONodeDataType
+
 		switch v := value.(type) {
 		case int:
 			inputNodeDataType = node.Int
