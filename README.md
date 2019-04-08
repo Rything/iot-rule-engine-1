@@ -3,7 +3,7 @@
 ## Example
 - Flow
 ### MQTTSub -> Script -> Debug Result
-```
+```go
 package main
 
 import (
@@ -160,7 +160,7 @@ func main() {
 }
 ```
 ### Result
-```
+```console
 -------Execute MQTT-Sub node----------
 Host: 127.0.0.1
 Port: 1885
