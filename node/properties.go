@@ -12,6 +12,7 @@ type FormInput struct {
 	IsRequired bool
 }
 
+// Properties
 type Properties struct {
 	FormInputs []FormInput
 }
