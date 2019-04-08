@@ -36,6 +36,10 @@ func (n *Node) SetProperties(p Properties) {
 	n.properties = p
 }
 
+func (n *Node) GetProperties() Properties {
+	return n.properties
+}
+
 func (n *Node) SetConfig(cf NodeConfig) {
 	n.config = cf
 }
