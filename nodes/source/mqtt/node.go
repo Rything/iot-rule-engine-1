@@ -29,24 +29,24 @@ func (mqtt MQTTNode) Config() node.NodeConfig {
 
 func (mqtt MQTTNode) Properties() node.Properties {
 
+	formInputs := make(map[string]*node.FormInput)
+	formInputs["host"] = &node.FormInput{
+		InputType:    node.Text,
+		DefaultValue: "127.0.0.1",
+		IsRequired:   true,
+	}
+	formInputs["port"] = &node.FormInput{
+		InputType:    node.Text,
+		DefaultValue: "1885",
+		IsRequired:   true,
+	}
+	formInputs["topic"] = &node.FormInput{
+		InputType:    node.Text,
+		DefaultValue: "/home/sensor",
+		IsRequired:   true,
+	}
 	return node.Properties{
-		FormInputs: map[string]node.FormInput{
-			"host": node.FormInput{
-				InputType:    node.Text,
-				DefaultValue: "127.0.0.1",
-				IsRequired:   true,
-			},
-			"port": node.FormInput{
-				InputType:    node.Text,
-				DefaultValue: "1885",
-				IsRequired:   true,
-			},
-			"topic": node.FormInput{
-				InputType:    node.Text,
-				DefaultValue: "/home/sensor",
-				IsRequired:   true,
-			},
-		},
+		FormInputs: formInputs,
 	}
 
 }

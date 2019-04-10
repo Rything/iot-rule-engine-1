@@ -30,8 +30,8 @@ func (f FilterNode) Config() node.NodeConfig {
 
 func (f FilterNode) Properties() node.Properties {
 	return node.Properties{
-		FormInputs: map[string]node.FormInput{
-			"script": node.FormInput{
+		FormInputs: map[string]*node.FormInput{
+			"script": &node.FormInput{
 				InputType:    node.Text,
 				DefaultValue: "return input==='Hello World';",
 				IsRequired:   true,

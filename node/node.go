@@ -70,6 +70,20 @@ func (n *Node) GetProperties() Properties {
 	return n.properties
 }
 
+func (n *Node) SetFormInput(key string, value interface{}) {
+	if _, ok := n.properties.FormInputs[key]; ok {
+		n.properties.FormInputs[key].Value = value
+	}
+}
+
+func (n *Node) GetFormInput(key string) *FormInput {
+	if val, ok := n.properties.FormInputs[key]; ok {
+		return val
+	}
+
+	return nil
+}
+
 func (n *Node) SetConfig(cf NodeConfig) {
 	n.config = cf
 }

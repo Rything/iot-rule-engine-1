@@ -19,15 +19,26 @@ func main() {
 	filterNode := node.NewNodeWithPlugin(node.Plugin{filter.FilterNode{}})
 	debugNode := node.NewNodeWithPlugin(node.Plugin{debug.DebugNode{}})
 
+	//Create Network
 	nw := network.NewNetwork()
+
+	//MQTT Node
+	mqttNode.SetFormInput("host", "192.168.1.30")
+	mqttNode.SetFormInput("port", "2000")
+	mqttNode.SetFormInput("topic", "/app/home/door")
 	nw.AddNode(mqttNode)
+
+	//Condition Node
 	nw.AddNode(filterNode)
+
+	//Debug Node
 	nw.AddNode(debugNode)
 
+	//Run Network
 	nw.Start()
 
-	var e int
-	fmt.Scanf("%d", &e)
+	// var e int
+	// fmt.Scanf("%d", &e)
 
 }
 

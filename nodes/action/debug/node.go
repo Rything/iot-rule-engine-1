@@ -28,8 +28,8 @@ func (d DebugNode) Config() node.NodeConfig {
 
 func (d DebugNode) Properties() node.Properties {
 	return node.Properties{
-		FormInputs: map[string]node.FormInput{
-			"format": node.FormInput{
+		FormInputs: map[string]*node.FormInput{
+			"format": &node.FormInput{
 				InputType:    node.Text,
 				DefaultValue: "json",
 				IsRequired:   true,
