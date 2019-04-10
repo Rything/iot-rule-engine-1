@@ -15,7 +15,7 @@ type FormInput struct {
 
 // Properties
 type Properties struct {
-	FormInputs map[string]FormInput
+	FormInputs map[string]*FormInput
 }
 
 func (fi FormInput) GetStringValue() string {
