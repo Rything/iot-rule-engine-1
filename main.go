@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/nattaponra/iot-rule-engine/nodes/source/mqtt"
 
 	"github.com/nattaponra/iot-rule-engine/network"
@@ -40,27 +38,4 @@ func main() {
 	// var e int
 	// fmt.Scanf("%d", &e)
 
-}
-
-type MQTT struct{}
-
-func (MQTT) Info() node.Info {
-	return node.Info{
-		Name:     "ScriptNode",
-		NodeType: node.ActionNode,
-	}
-}
-
-type Debug struct{}
-
-func (Debug) Info() {
-	fmt.Println("Debug")
-}
-
-type Plugin interface {
-	Info()
-}
-
-type Operation struct {
-	Plugin Plugin
 }
