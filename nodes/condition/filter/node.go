@@ -1,4 +1,4 @@
-package debug
+package filter
 
 import (
 	"fmt"
@@ -6,21 +6,20 @@ import (
 	"github.com/robertkrimen/otto"
 
 	"github.com/nattaponra/iot-rule-engine/node"
-	"github.com/nattaponra/iot-rule-engine/nodes"
 )
 
-var _ nodes.INode = (*FilterNode)(nil)
+var _ node.PluginNode = (*FilterNode)(nil)
 
 type FilterNode struct{}
 
-func (f *FilterNode) Info() nodes.Info {
-	return nodes.Info{
+func (f FilterNode) Info() node.Info {
+	return node.Info{
 		Name:     "ScriptNode",
 		NodeType: node.ActionNode,
 	}
 }
 
-func (f *FilterNode) Config() node.NodeConfig {
+func (f FilterNode) Config() node.NodeConfig {
 	return node.NodeConfig{
 		InputNodeType:      node.Single,
 		InputNodeDataType:  node.String,
@@ -29,17 +28,20 @@ func (f *FilterNode) Config() node.NodeConfig {
 	}
 }
 
-func (f *FilterNode) FormInput() map[string]node.FormInput {
-	return map[string]node.FormInput{
-		"script": node.FormInput{
-			InputType:    node.Text,
-			DefaultValue: "return input==='Hello World';",
-			IsRequired:   true,
+func (f FilterNode) Properties() node.Properties {
+	return node.Properties{
+		FormInputs: map[string]*node.FormInput{
+			"script": &node.FormInput{
+				InputType:    node.Text,
+				DefaultValue: "return input==='Hello World';",
+				IsRequired:   true,
+			},
 		},
 	}
+
 }
 
-func (f *FilterNode) Execute() func(node.Node, chan interface{}) {
+func (f FilterNode) Execute() func(node.Node, chan interface{}) {
 	return func(n node.Node, output chan interface{}) {
 
 		pro := n.GetProperties()
