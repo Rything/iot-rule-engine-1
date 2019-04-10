@@ -18,6 +18,35 @@ type Node struct {
 	Output     interface{}
 }
 
+type Info struct {
+	Name     string
+	NodeType NodeType
+}
+
+type PluginNode interface {
+	Info() Info
+	Config() NodeConfig
+	Properties() Properties
+	Execute() func(Node, chan interface{})
+}
+
+type Plugin struct {
+	Plugin PluginNode
+}
+
+func NewNodeWithPlugin(p Plugin) *Node {
+
+	node := Node{
+		Name: p.Plugin.Info().Name,
+		Type: p.Plugin.Info().NodeType,
+	}
+	node.SetProperties(p.Plugin.Properties())
+	node.SetConfig(p.Plugin.Config())
+	node.SetExecute(p.Plugin.Execute())
+
+	return &node
+}
+
 func NewNode(name string, nodeType NodeType) *Node {
 	return &Node{
 		Name: name,
